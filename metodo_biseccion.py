@@ -2,6 +2,10 @@
 from math import *
 import sympy as sp
 
+# libreria para grafico
+import matplotlib.pyplot as plt
+import numpy as np
+
 def biseccion():
     # Definimos la variable X como un simbolo matematico para poder utilizar a futuro
     x = sp.symbols('x')
@@ -39,6 +43,24 @@ def biseccion():
         print(f"x0 = {a} | x1 = {b}]")
         k = k+1
     print (f"X -> {k} = {m} es una buena aproximacion como raiz")
+
+    # Grafico
+    raiz = m
+    X = np.linspace(0, 2, 400)   # intervalo amplio para ver la forma
+    Y = f_np(X)
+    plt.figure(figsize=(7,4))
+    plt.plot(X, Y, label="f(x)")
+    plt.axhline(0, color="k", linewidth=1)
+    plt.axvline(0, color="k", linewidth=1)
+    plt.plot(raiz, 0, "ro", label=f"raíz ≈ {raiz:.6f}")
+    plt.ylim(-2, 2)
+    plt.title("Función con raíz resaltada")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 def iteraciones():
     # Recibimos del usuario los valores de x0, x1 y tolerancia
