@@ -80,29 +80,21 @@ def newton_raphson():
         print(f"No se alcanzó la tolerancia en {max_iter} iteraciones o se detuvo antes. Último x ≈ {x1}, |Δ|={paso}, |f(x)|={fval}.")
         raiz = x1
 
+    # Grafico
     ancho_ref = 5.0 * (paso if paso not in (None, 0.0) else 1e-2)
     ancho = max(1.0, ancho_ref)
     Xmin, Xmax = x1 - ancho, x1 + ancho
-
     X = np.linspace(Xmin, Xmax, 1000)
     Y = f_np(X)
-
-    # Filtrar no finitos (ej: log, tan, divisiones)
     mask = np.isfinite(Y)
     X = X[mask]
     Y = Y[mask]
-
     plt.figure(figsize=(7,4))
     plt.plot(X, Y, label='f(x)')
     plt.axhline(0, linewidth=1, color='k')
     plt.axvline(0, linewidth=1, color='k')
-
-    # Raíz marcada exactamente sobre y = 0
     plt.plot(x1, 0, 'o', label=f'raíz ≈ {x1:.6f}')
-    plt.annotate(f"f({x1:.6f}) = {f(x1):.2e}",
-                 xy=(x1, 0), xytext=(10, 15), textcoords='offset points',
-                 arrowprops=dict(arrowstyle='->', lw=1))
-
+    plt.annotate(f"f({x1:.6f}) = {f(x1):.2e}", xy=(x1, 0), xytext=(10, 15), textcoords='offset points', arrowprops=dict(arrowstyle='->', lw=1))
     plt.title('Función con raíz marcada (Newton-Raphson)')
     plt.xlabel('x'); plt.ylabel('f(x)')
     plt.grid(True, alpha=0.3)
