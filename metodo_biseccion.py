@@ -2,9 +2,6 @@
 from math import *
 import sympy as sp
 
-#librerías para graficar
-import matplotlib.pyplot as plt
-
 def biseccion():
     # Definimos la variable X como un simbolo matematico para poder utilizar a futuro
     x = sp.symbols('x')
@@ -42,35 +39,6 @@ def biseccion():
         print(f"x0 = {a} | x1 = {b}]")
         k = k+1
     print (f"X -> {k} = {m} es una buena aproximacion como raiz")
-
-    # Construccion del grafico de la funcion analizada
-    X = []
-    Y = []
-    pasos = 200   # cantidad de puntos para suavizar la curva
-    izquierda = min(a, b, m)
-    derecha   = max(a, b, m)
-    paso = (derecha - izquierda) / pasos
-
-    xi = izquierda
-    while xi <= derecha:
-        try:
-            X.append(xi)
-            Y.append(f(xi))
-        except:
-            X.append(xi)
-            Y.append(float("nan"))  # por si hay discontinuidades
-        xi += paso
-
-    plt.figure(figsize=(7,4.5))
-    plt.plot(X, Y, label="f(x)")
-    plt.axhline(0, color="black", linewidth=1)
-    plt.scatter([m], [0], color="red", label="Raíz aprox")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.title("Bisección – gráfico simple (sin numpy)")
-    plt.legend()
-    plt.grid(True, alpha=0.3)
-    plt.show()
 
 def iteraciones():
     # Recibimos del usuario los valores de x0, x1 y tolerancia
