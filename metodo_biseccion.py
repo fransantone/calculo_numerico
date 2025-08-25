@@ -31,11 +31,14 @@ def biseccion():
     print (f"X -> {k} = {m} es una buena aproximacion como raiz")
 
 def iteraciones():
+    # Recibimos del usuario los valores de x0, x1 y tolerancia
     x0 = int(input("Ingrese el valor de x0: "))
     x1 = int(input("Ingrese el valor de x1: "))
     tol = float(sp.sympify(input("Ingrese el valor de la tolerancia: ")))
+    # Calculamos el log en base 2 de la division entre la diferencia de x1 - x0 sobre la tolerancia
     diferencia = abs(x1 - x0)
     n = sp.log(diferencia/tol, 2)
+    # Redondeamos para arriba
     cantidad_iteraciones = int(sp.ceiling(n))
     print(f"Cantidad de iteraciones necesarias = {cantidad_iteraciones}")
     return 
