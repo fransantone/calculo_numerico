@@ -2,6 +2,9 @@
 from math import *
 import sympy as sp
 
+#librerías para graficar
+import matplotlib.pyplot as plt
+
 def biseccion():
     # Definimos la variable X como un simbolo matematico para poder utilizar a futuro
     x = sp.symbols('x')
@@ -12,9 +15,12 @@ def biseccion():
     except Exception as e:
         print(f"Función inválida: {e}")
         return
+    
     # Convertimos la funcion simbolica en una funcion que sea interpretada por python
     f = sp.lambdify(x, f_expr, "math")
+    f_np = sp.lambdify(x, f_expr, "numpy") #funcion que me permite graficar
     num = lambda msg: float(sp.sympify(msg, locals={"pi": sp.pi, "E": sp.E, "e": sp.E, "sqrt": sp.sqrt}))
+
     # Solicitamos los valores de x0, x1 y tolerancia
     a = num(input("Ingrese el valor de A: "))
     b = num(input("Ingrese el valor de B: "))
@@ -22,6 +28,7 @@ def biseccion():
     m1 = a
     m = b
     k = 0
+
     # Realizamos las cuentas para cada intervalo y mostramos por consola los intervalos con las raices
     if (f(a)*f(b)>0):
         print("La funcion no cambia de signo")
@@ -36,14 +43,45 @@ def biseccion():
         k = k+1
     print (f"X -> {k} = {m} es una buena aproximacion como raiz")
 
+    # Construccion del grafico de la funcion analizada
+    X = []
+    Y = []
+    pasos = 200   # cantidad de puntos para suavizar la curva
+    izquierda = min(a, b, m)
+    derecha   = max(a, b, m)
+    paso = (derecha - izquierda) / pasos
+
+    xi = izquierda
+    while xi <= derecha:
+        try:
+            X.append(xi)
+            Y.append(f(xi))
+        except:
+            X.append(xi)
+            Y.append(float("nan"))  # por si hay discontinuidades
+        xi += paso
+
+    plt.figure(figsize=(7,4.5))
+    plt.plot(X, Y, label="f(x)")
+    plt.axhline(0, color="black", linewidth=1)
+    plt.scatter([m], [0], color="red", label="Raíz aprox")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.title("Bisección – gráfico simple (sin numpy)")
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.show()
+
 def iteraciones():
     # Recibimos del usuario los valores de x0, x1 y tolerancia
     x0 = int(input("Ingrese el valor de x0: "))
     x1 = int(input("Ingrese el valor de x1: "))
     tol = float(sp.sympify(input("Ingrese el valor de la tolerancia: ")))
+
     # Calculamos el log en base 2 de la division entre la diferencia de x1 - x0 sobre la tolerancia
     diferencia = abs(x1 - x0)
     n = sp.log(diferencia/tol, 2)
+
     # Redondeamos para arriba
     cantidad_iteraciones = int(sp.ceiling(n))
     print(f"Cantidad de iteraciones necesarias = {cantidad_iteraciones}")
