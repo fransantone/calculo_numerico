@@ -2,6 +2,10 @@
 import sympy as sp
 from math import *
 
+# Librerias para graficar
+import numpy as np
+import matplotlib.pyplot as plt
+
 def newton_raphson():
     # Definimos la variable X como un simbolo matematico para poder utilizar a futuro    
     x = sp.symbols('x')
@@ -15,6 +19,7 @@ def newton_raphson():
 
     # Convertimos la funcion simbolica ingresada por el usuario a una funcion que pueda ser interpreta por python y asi poder derivarla y trabajarla
     f = sp.lambdify(x, f_expr, "math")
+    f_np = sp.lambdify(x, f_expr, "numpy")
     df_expr = sp.diff(f_expr, x)
     df = sp.lambdify(x, df_expr, "math")
 
@@ -51,25 +56,59 @@ def newton_raphson():
         # Si aparece un valor NaN o infinito → se corta el algoritmo
         if any(isnan(v) or isinf(v) for v in [x1, paso, fval]):
             print(f"Iteración X{k}: valores no numéricos/inf. Se detiene.")
-            return
+            break
         
         # Mostramos el estado de la iteración actual
         print(f"Iteración X{k} -> x0 = {x0} | x1 = {x1} | Paso = {paso} | Valor de f(x1) = {fval}")
 
         # Criterio de convergencia: si el paso es menor a la tolerancia → se detiene
         if paso < tol:
+            convergio = True
             print(f"Convergió en x{k} -> x1 ≈ {x1} con paso = {paso} y valor de f(x1) = {fval}.")
-            return
+            break
         
         # Control adicional: si la aproximación explota a un valor muy grande → sospecha de divergencia
         if abs(x1) > 1e12:
             print(f"Iteración {k}: posible divergencia (|x| muy grande). Se detiene.")
-            return
+            break
 
         # Actualizamos x0 para la siguiente iteración
         x0 = x1
 
     # De no encontrar una raiz dentro de las 1000 iteraciones mostramos donde quedo la ultima y sus valores correspondientes
-    print(f"No se alcanzó la tolerancia en {max_iter} iteraciones. Último x ≈ {x1}, |Δ|={paso}, |f(x)|={fval}.")
+    if not convergio:
+        print(f"No se alcanzó la tolerancia en {max_iter} iteraciones o se detuvo antes. Último x ≈ {x1}, |Δ|={paso}, |f(x)|={fval}.")
+        raiz = x1
 
-newton_raphson()
+    ancho_ref = 5.0 * (paso if paso not in (None, 0.0) else 1e-2)
+    ancho = max(1.0, ancho_ref)
+    Xmin, Xmax = x1 - ancho, x1 + ancho
+
+    X = np.linspace(Xmin, Xmax, 1000)
+    Y = f_np(X)
+
+    # Filtrar no finitos (ej: log, tan, divisiones)
+    mask = np.isfinite(Y)
+    X = X[mask]
+    Y = Y[mask]
+
+    plt.figure(figsize=(7,4))
+    plt.plot(X, Y, label='f(x)')
+    plt.axhline(0, linewidth=1, color='k')
+    plt.axvline(0, linewidth=1, color='k')
+
+    # Raíz marcada exactamente sobre y = 0
+    plt.plot(x1, 0, 'o', label=f'raíz ≈ {x1:.6f}')
+    plt.annotate(f"f({x1:.6f}) = {f(x1):.2e}",
+                 xy=(x1, 0), xytext=(10, 15), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', lw=1))
+
+    plt.title('Función con raíz marcada (Newton-Raphson)')
+    plt.xlabel('x'); plt.ylabel('f(x)')
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    newton_raphson()
