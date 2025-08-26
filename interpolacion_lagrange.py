@@ -1,6 +1,8 @@
+# Importamos librerias para trabajar con funciones y simbolos matematicos
 import numpy as np
 import sympy as sp
 
+# Definimos los calculos correspondientes de lagrange en base al grado que se desea calcular
 def lagrange_grado_1 (x, x0, x1, y0, y1):
     lx0 = (x-x1)/(x0-x1)
     lx1 = (x-x0)/(x1-x0)
@@ -31,6 +33,7 @@ def lagrange_grado_4 (x, x0, x1, x2, x3, x4, y0, y1, y2, y3, y4):
     fx = y0 * lx0 + y1 * lx1 + y2 * lx2 + y3 * lx3 + y4 * lx4
     return fx
 
+# Leo el graado ingresados por el usuario por medio de la consola
 def leer_grado():
     while True:
         try:
@@ -41,6 +44,7 @@ def leer_grado():
         except ValueError:
             print("ERROR! Ingrese un número válido.")
 
+# Leo los nodos que tengo para calcular luego
 def leer_nodos(n):
     x_nodos = []
     for i in range(n+1):
@@ -49,10 +53,12 @@ def leer_nodos(n):
         raise ValueError("ERROR! Los nodos deben ser distintos.")
     return x_nodos
 
+# Defino la f(x) en caso de contar con una
 def preguntar_funcion():
     r = input("Tenés f(x) para calcular los valores correspondientes automáticamente? [si/no]: ").strip().lower()
     return r == 'si'
 
+# En caso de contar con una f(x) convierto dicha funcion en una funcion que sea interpretada por python
 def parsear_funcion(func_str):
     x = sp.symbols('x')
     loc = {"x": x, "sin": sp.sin, "sen": sp.sin, "cos": sp.cos, "tan": sp.tan, "exp": sp.exp, "log": sp.log, "sqrt": sp.sqrt, "pi": sp.pi, "e": sp.E, "E": sp.E}
@@ -60,12 +66,14 @@ def parsear_funcion(func_str):
     funcion =sp.lambdify(x, f_expr, "math")
     return funcion
 
+# De no tener funcion, solicito y leo los f(x) calculados en los nodos
 def leer_y(n):
     f_x_y = []
     for i in range(n+1):
         f_x_y.append(float(input(f"Ingrese y{i}: ")))
     return f_x_y
 
+# Solicito al usuario que ingrese los o el punto(s) a evaluar
 def leer_x_eval():
     s = input("Ingrese el/los punto(s) a evaluar (separados por coma si son varios): ").strip()
     if "," in s:
@@ -73,14 +81,18 @@ def leer_x_eval():
     x_puntos = [float(s)]
     return x_puntos
 
+#   ----- PROGRAMA PRINCIPAL ----
 def main():
     print("\n=== Interpolación de Lagrange ===\n")
+    #Pido el grado a calcular
     grado = leer_grado()
     n = grado
 
+    #Calculo los nodos
     print(f"\nIngrese {n+1} nodos:")
     xs = leer_nodos(n)
 
+    # Consulto por funcion, de no tener pido los valores de y
     if preguntar_funcion():
         func_str = input("Ingrese f(x): ")
         f = parsear_funcion(func_str)
@@ -89,8 +101,10 @@ def main():
     else:
         ys = leer_y(n)
 
+    # Solicito el valor de con el que deseo trabajr
     xe = leer_x_eval()
 
+    # Muestro los resultados
     print("\n--- Resultados ---")
     for xv in xe:
         if grado == 1:
@@ -106,5 +120,6 @@ def main():
             x0,x1,x2,x3,x4 = xs; y0,y1,y2,y3,y4 = ys
             print(f"P({xv}) =", lagrange_grado_4(xv, x0,x1,x2,x3,x4, y0,y1,y2,y3,y4))
 
+# Ejecucion de programa
 if __name__ == "__main__":
     main()
