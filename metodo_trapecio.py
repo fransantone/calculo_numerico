@@ -1,5 +1,6 @@
 import math
 import sympy as sp
+import mpmath as mp
 
 def nodos(a, n, h):
     if n <= 0:
