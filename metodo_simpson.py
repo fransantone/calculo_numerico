@@ -1,7 +1,7 @@
 import sympy as sp
 
 def nodos(a, n, h):
-    if n <= 0 or n % 2 != 0:
+    if n <= 1 or n % 2 != 0:
         raise ValueError("n debe ser positiva y par")
     xs = []
     for i in range (n+1):
@@ -9,7 +9,12 @@ def nodos(a, n, h):
         xs.append(xi)
     return xs
 
-def integral_simpson (f, a, b, n, h):
+def integral_simpson(f, a, b):
+    xi = (a + b)/2
+    simpson_simple = ((b-a)/6) * (f(a) + f(b) + (4 * f(xi)))
+    return simpson_simple
+
+def integral_simpson_compuesta (f, a, n, h):
     xs = nodos(a, n, h)
     simpson = f(xs[0]) + f(xs[-1])
     for i in range (1,n):
@@ -37,10 +42,16 @@ def main():
         print(f"Función inválida: {e}")
         return
     h = (b-a)/n
-    smp = integral_simpson(f_num, a, b, n, h)
-    print("======= Resultados =======")
-    print (f"Intervalo: {a} ; {b} | con {n} subintervalos")
-    print(f"Integral de f(x) por simpson: {smp}")
+    if n == 2:
+        smp = integral_simpson(f_num, a, b)
+        print("======= Resultados =======")
+        print (f"Intervalo: {a} ; {b} | con {n} subintervalos")
+        print(f"Integral de f(x) por simpson: {smp}")
+    else:
+        smp_compuesta = integral_simpson_compuesta(f_num, a, n, h)
+        print("======= Resultados =======")
+        print (f"Intervalo: {a} ; {b} | con {n} subintervalos")
+        print(f"Integral de f(x) por simpson compuesta: {smp_compuesta}")
 
 if __name__ == "__main__":
     main()
