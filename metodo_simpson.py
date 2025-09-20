@@ -1,8 +1,6 @@
 import sympy as sp
 
 def nodos(a, n, h):
-    if n <= 1 or n % 2 != 0:
-        raise ValueError("n debe ser positiva y par")
     xs = []
     for i in range (n+1):
         xi = a + i * h
@@ -32,6 +30,8 @@ def main():
     a = float(input("Ingrese el valor de A: "))
     b = float(input("Ingrese el valor de B: "))
     n = int(input("Ingrese el valor de N: "))
+    if n <= 1 or n % 2 != 0:
+        raise ValueError("n debe ser positiva y par")
     funcion = input("Ingrese f(x) a evaluar: ")
     try:
         x = sp.Symbol('x')
