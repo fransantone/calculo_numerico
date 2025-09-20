@@ -20,7 +20,7 @@ def integral_simpson_compuesta (f, a, n, h):
     xm = []
     for i in range (0,n):
         xmi = (xs[i] + xs[i+1]) / 2
-        xm.append(xmi) 
+        xm.append(xmi)
     for i in range (0, n):
         simpson = simpson + 4 * f(xm[i])
     resultado_final = (h/6) * simpson
