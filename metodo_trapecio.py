@@ -12,11 +12,11 @@ def nodos(a, n, h):
 def integral_trapecio (f, a, b, n, h):
     xs = nodos(a, n, h)   
 # esto seria la parte del trapecio que suma f(x0) + f(xn)
-    s = f(xs[0]) + f(xs[-1])
+    trapecio = f(xs[0]) + f(xs[-1])
 # esto seria la parte de 2 * la sumatoria de f(xi) hasta f(xn-1)
     for i in range (1,n):
-        s = s + 2 * f(xs[i])
-    resultado_final = (h/2) * s
+        trapecio = trapecio + 2 * f(xs[i])
+    resultado_final = (h/2) * trapecio
     return resultado_final
 
 #Cota teotrica del error
