@@ -133,5 +133,15 @@ def resolver_sistema():
     for i, xi in enumerate(x, start=1):
         print(f"E{i} = {xi:.10f}")
 
+# Se deben de desarrollar las funciones correspondientes para calcular los autovectores, autovalores y si una matriz es diagonalizable o no
+def autovalores():
+    pass
+
+def autovectores():
+    pass
+
+def diagonalizacion():
+    pass
+
 if __name__ == "__main__":
     resolver_sistema()
