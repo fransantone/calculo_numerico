@@ -140,6 +140,9 @@ def autovalores():
 def autovectores():
     pass
 
+def gauss_jordan():
+    pass
+
 def diagonalizacion():
     pass
 
